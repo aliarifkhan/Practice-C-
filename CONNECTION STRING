@@ -1,1 +1,55 @@
+Database First;
+Scaffold-DbContext "server=ALEE; database=LoginDb; trusted_connection=true; trustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir "Models"
 
+Code First;
+server=MR_SHERRY\\SQLEXPRESS; database=hospitaldb; trusted_connection=true; Integrated Security=True; MultipleActiveResultSets=true; trustServerCertificate=True;
+
+
+Crystal Report
+string connectionString = @"Data Source=MR_SHERRY\SQLEXPRESS;Initial Catalog=KhalidRashid_2223;Integrated Security=True;TrustServerCertificate=True;";
+
+
+inConnectionString(Code First)
+Data Source=MR_SHERRY\\SQLEXPRESS;Initial Catalog=KhalidRashid_2223;Integrated Security=True;TrustServerCertificate=True;
+
+program cs connection string:
+builder.Services.AddDbContext<StudentContext>(options=>options.UseSqlServer(builder.Configuration.GetConnectionString("dbcs")));
+ 
+Code First in appsitting.jason
+  "ConnectionStrings": {
+     "dbcs": "server=ALEE; database=IDMS; trusted_connection=true; trustServerCertificate=True;"
+ },
+ 
+  Code First in Program.cs
+  var provider = builder.Services.BuildServiceProvider();
+  var config = provider.GetRequiredService<IConfiguration>();
+  builder.Services.AddDbContext<StudentDBContext>(item=>item.UseSqlServer(config.GetConnectionString("dbcs")));
+  
+  ✅ Fix: Add JWT Authorization in Swagger UI
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Enter 'Bearer {your token}' to authenticate."
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+});
